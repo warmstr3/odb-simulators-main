@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: outstation
+  namespace: odb
+  labels:
+    app: outstation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: outstation
+  template:
+    metadata:
+      name: outstation
+      labels:
+        app: outstation
+    spec:
+      containers:
+        - name: outstation
+          image: nginx
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 20000
+              protocol: TCP
+      restartPolicy: Always
+      

@@ -1,0 +1,10 @@
+services:
+  local:
+    build: .
+    image: dnp3/dnp3-master
+    container_name: "dnp3-master"
+    environment:
+      OUTSTATION_IP: "10.15.80.253"
+      OUTSTATION_PORT: 80
+      OUTSTATION_ID: 1024
+      MASTER_ID: 1

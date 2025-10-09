@@ -1,0 +1,39 @@
+﻿services:
+  outstation:
+    environment:
+      TRANSPORT: "tcp"
+      DEVICE_TYPE: "SEL651R2"
+    image: outstation
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    build:
+      context: .
+      dockerfile: Outstation/Dockerfile
+      target: final
+    ports:
+      - "20000:20000"
+    networks:
+      custom-bridge:
+          ipv4_address: 192.168.1.11
+
+  master:
+    environment:
+      TRANSPORT: "tcp"
+      OUTSTATION_IP: "outstation"
+    image: master
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    build:
+      context: .
+      dockerfile: Master/Dockerfile
+      target: final
+    networks:
+      custom-bridge:
+        ipv4_address: 192.168.1.10
+
+networks:
+  custom-bridge:
+    ipam:
+      config:
+        - subnet: "192.168.1.0/24"
+          gateway: "192.168.1.1"

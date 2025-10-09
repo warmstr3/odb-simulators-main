@@ -1,0 +1,7 @@
+services:
+  local:
+    build: .
+    image: web/web_server
+    container_name: "web_server"
+    ports:
+      - "80:80"

@@ -1,0 +1,8 @@
+services:
+  local:
+    build: .
+    image: dnp3-python/dnp3-master
+    container_name: "dnp3-python-master"
+    environment:
+      OUTSTATION_IP: "host.docker.internal"
+      OUTSTATION_PORT: 20000

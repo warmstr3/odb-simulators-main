@@ -1,0 +1,18 @@
+services:
+  vtn:
+    build: ./openadr-vtn
+    image: openadr/openadr-vtn
+    container_name: "openadr-vtn"
+    environment:
+      DEBUG: "0"
+    ports:
+      - "8080:8080"
+  ven:
+    build: ./openadr-ven
+    image: openadr/openadr-ven
+    container_name: "openadr-ven"
+    depends_on:
+      - vtn
+    environment:
+      VTN: "http://host.docker.internal:8080/OpenADR2/Simple/2.0b"
+      DEBUG: "0"

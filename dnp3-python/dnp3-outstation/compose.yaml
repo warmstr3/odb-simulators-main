@@ -1,0 +1,7 @@
+services:
+  local:
+    build: .
+    image: dnp3-python/dnp3-outstation
+    container_name: "dnp3-python-outstation"
+    ports:
+      - "20000:20000"

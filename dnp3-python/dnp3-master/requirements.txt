@@ -1,0 +1,2 @@
+cmake==3.16.3
+dnp3-python

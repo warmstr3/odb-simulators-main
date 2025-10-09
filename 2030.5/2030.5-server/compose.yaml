@@ -1,0 +1,9 @@
+services:
+  local:
+    build: .
+    image: 2030.5/2030.5-server
+    container_name: "2030.5-server"
+    ports:
+      - "8443:8443"
+    volumes:
+      - "~/data/2030.5:/home/volttron"

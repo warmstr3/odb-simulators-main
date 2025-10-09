@@ -1,0 +1,45 @@
+name: Build & Push Docker Image 
+on:
+ workflow_dispatch:
+  inputs:
+   COMPONENT:
+    type: choice
+    description: 'Select the component'
+    required: true
+    options: 
+    - proxy
+    - openadr/openadr-ven
+    - openadr/openadr-vtn
+    - web
+    - dnp3-python/dnp3-master
+    - dnp3-python/dnp3-outstation
+    - 2030.5/2030.5-server
+   VERSION:
+    description: 'Provide the version'
+    required: true
+    default: 'latest'
+env: 
+ JFROG_REGISTRY_URL: artifactory.nationalgrid.com
+ JFROG_LOCAL_REPO: derms-odb
+jobs:
+ docker-build:
+   runs-on:
+     group: aks-runners
+   steps:
+   - name: Checkout Code
+     uses: actions/checkout@v4 
+   - name: Container Registry Login
+     run: |
+      docker login -u ${{ secrets.JFROG_ARTIFACTORY_USER }} -p ${{ secrets.JFROG_ARTIFACTORY_PASSWORD }} ${{ env.JFROG_REGISTRY_URL }}  
+   - name: Build Docker Image
+     run: |       
+       cd ${{ inputs.COMPONENT }}      
+       docker build -f Dockerfile -t ${{ inputs.COMPONENT }}:${{ inputs.VERSION }} .       
+   - name: Re-Tag Images
+     run: |
+      echo "Test"
+      docker tag ${{ inputs.COMPONENT }}:${{ inputs.VERSION }} ${{ env.JFROG_REGISTRY_URL }}/${{ env.JFROG_LOCAL_REPO }}/${{ inputs.COMPONENT }}:${{ inputs.VERSION }}
+   - name: Push Images to JFrog Registry
+     run: |   
+      echo "Test"
+      docker push ${{ env.JFROG_REGISTRY_URL }}/${{ env.JFROG_LOCAL_REPO }}/${{ inputs.COMPONENT }}:${{ inputs.VERSION }}

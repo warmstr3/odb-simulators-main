@@ -1,0 +1,51 @@
+# This is a basic workflow to help you get started with Using Checkmarx CxFlow Action
+
+name: CheckMarxFlow AST PoV
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+  # schedule:
+  #   - cron: '0 0 * * 6'  # Runs every Saturday at midnight
+
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel - this job is specifically configured to use the Checkmarx CxFlow Action
+permissions:
+  contents: read
+
+jobs:
+   build:
+    # The type of runner that the job will run on - Ubuntu is required as Docker is leveraged for the action
+    permissions:
+      contents: read 
+      issues: write 
+      pull-requests: write 
+      security-events: write 
+      actions: read 
+    runs-on: ubuntu-latest
+
+    
+    steps:
+    
+      - uses: actions/checkout@v4
+
+      - name: Checkmarx AST CLI Action
+        uses: checkmarx/ast-github-action@main #Github Action version
+        with:
+          base_uri: https://ast.checkmarx.net/
+          cx_tenant: nationalgrid
+          cx_client_id: ${{ secrets.CX_CLIENT_ID }}
+          cx_client_secret: ${{ secrets.CX_CLIENT_SECRET }}
+          project_name: ${{ github.repository }}
+          additional_params: --report-format sarif --output-path . --project-groups ${{ secrets.CX_CLIENT_GROUP }}
+
+      - name: Check Files
+        run: ls
+    
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+           sarif_file: cx_result.sarif

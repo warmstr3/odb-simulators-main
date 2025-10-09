@@ -1,0 +1,19 @@
+services:
+  outstation:
+    build: ./dnp3-outstation
+    image: dnp3-python/dnp3-outstation
+    container_name: "dnp3-outstation"
+    environment:
+      DEBUG: 1
+    ports:
+      - "20000:20000"
+  master:
+    build: ./dnp3-master
+    image: dnp3-python/dnp3-master
+    container_name: "dnp3-master"
+    depends_on:
+      - outstation
+    environment:
+      OUTSTATION_IP: "host.docker.internal"
+      OUTSTATION_PORT: 20000
+      DEBUG: 1

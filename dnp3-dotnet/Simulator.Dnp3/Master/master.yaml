@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: master
+  labels:
+    app: master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: master
+  template:
+    metadata:
+      name: master
+      labels:
+        app: master
+    spec:
+      containers:
+        - name: master
+          image: nginx
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 20000
+              protocol: TCP
+      restartPolicy: Always
+      
